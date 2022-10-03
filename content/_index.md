@@ -123,6 +123,8 @@ COMMIT - медленный, минимум RTT между ДЦ (autocommit - з
 
 * Отстающиее реплики
 
+* Ненадеждая конфигурация
+
 ---
 
 ### Ненадеждная конфигурация
@@ -135,13 +137,28 @@ innodb_flush_log_at_trx_commit = 0 | 2
 
 ---
 
+### Как ускорить репликацию
+
+* Не делать крупных транзакций!
+
+```
+slave_rows_search_algorithms = INDEX_SCAN,HASH_SCAN
+
+slave_parallel_workers = 16
+
+slave_parallel_type = LOGICAL_CLOCK
+
+binlog_transaction_dependency_tracking = COMMIT_ORDER
+```
+---
+
 ### И это все что нужно ? 
 
 Ну конечно нет!
 
-* Приложение должно находить PRIMARY
-
 * Переналивка сломаных хостов (соглашение про touch-file)
+
+* Приложение должно находить PRIMARY
 
 * Резервное копирование + PITR
 
@@ -176,3 +193,4 @@ innodb_flush_log_at_trx_commit = 0 | 2
 ### Как скачать и попробовать
 
 https://github.com/yandex/mysync
+
